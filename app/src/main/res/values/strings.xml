@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">RedditApp</string>
+    <string name="login">login</string>
+    <string name="skip">skip</string>
+    <string name="title_home">Home</string>
+    <string name="title_all">All</string>
+    <string name="title_popular">Popular</string>
+    <string name="hot_reddites">HOT</string>
+    <string name="new_reddites">NEW</string>
+    <string name="top_reddites">TOP</string>
+    <string name="controversial_reddites">CONTR.</string>
+    <string name="search">Search</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/home_subreddits"
+        android:icon="@drawable/ic_reddit"
+        android:title="@string/title_home" />
+
+    <item
+        android:id="@+id/all_subreddits"
+        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:title="@string/title_all" />
+
+    <item
+        android:id="@+id/popular_subreddits"
+        android:icon="@drawable/ic_pop_black_24dp"
+        android:title="@string/title_popular" />
+
+</menu>
