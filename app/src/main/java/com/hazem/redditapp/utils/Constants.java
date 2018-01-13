@@ -22,9 +22,9 @@ public class Constants {
             "scope=" + SCOPE;
     public static final String BASE_URL = "https://www.reddit.com/";
 
-    public static final String HOME_SUBRIDDIT = ".json";
-    public static final String ALL_SUBRIDDIT = "r/all/.json";
-    public static final String POPULAR_SUBRIDDIT = "r/popular/.json";
+    public static final String HOME_SUBRIDDIT = "";
+    public static final String ALL_SUBRIDDIT = "r/all/";
+    public static final String POPULAR_SUBRIDDIT = "r/popular/";
 
     public static final String NEW_POSTS = "new/.json";
     public static final String HOT_POSTS = "hot/.json";

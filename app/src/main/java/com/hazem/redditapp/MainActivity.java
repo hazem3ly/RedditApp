@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -23,18 +22,24 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.hazem.redditapp.adapters.ViewPagerAdapter;
+import com.hazem.redditapp.fragments.MainFragment;
+import com.hazem.redditapp.model.DataChanged;
+import com.hazem.redditapp.utils.Constants;
+import com.hazem.redditapp.utils.Navigator;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static String type = "";
+
+    public static DataChanged dataChangedListener;
     private ActionBar actionBar;
     private MenuItem mSearchAction;
     private boolean isSearchOpened = false;
     private EditText edtSeach;
-    private ViewPager viewPager;
     private TabLayout tabs;
     private BottomNavigationView navigation;
+
+    private String type = Constants.HOME_SUBRIDDIT;
+    private String filter = Constants.HOT_POSTS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,12 +61,42 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        viewPager = findViewById(R.id.view_pager);
-
-        viewPager.setAdapter(new ViewPagerAdapter(this, getSupportFragmentManager()));
+        Navigator.replaceFragmentInView(getSupportFragmentManager(), new MainFragment(), R.id.mFrame);
 
         tabs = findViewById(R.id.tabs);
-        tabs.setupWithViewPager(viewPager);
+        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+
+                switch (tab.getPosition()) {
+                    case 0:
+                        filter = Constants.HOT_POSTS;
+                        break;
+                    case 1:
+                        filter = Constants.NEW_POSTS;
+                        break;
+                    case 2:
+                        filter = Constants.RISING_POSTS;
+                        break;
+                    case 3:
+                        filter = Constants.CONTROVERSIAL_POSTS;
+                        break;
+                }
+
+                if (dataChangedListener != null) dataChangedListener.OnDataChanged(type + filter);
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                onTabSelected(tab);
+            }
+        });
 
         navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -69,17 +104,20 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.home_subreddits:
-                      // when click on home change type string to home
-                        viewPager.setAdapter(new ViewPagerAdapter(MainActivity.this, getSupportFragmentManager()));
-                        type = "home";
+                        // when click on home change type string to home
+                        type = Constants.HOME_SUBRIDDIT;
+                        if (dataChangedListener != null)
+                            dataChangedListener.OnDataChanged(type + filter);
                         return true;
                     case R.id.all_subreddits:
-                        viewPager.setAdapter(new ViewPagerAdapter(MainActivity.this, getSupportFragmentManager()));
-                        type = "all";
+                        type = Constants.ALL_SUBRIDDIT;
+                        if (dataChangedListener != null)
+                            dataChangedListener.OnDataChanged(type + filter);
                         return true;
                     case R.id.popular_subreddits:
-                        viewPager.setAdapter(new ViewPagerAdapter(MainActivity.this, getSupportFragmentManager()));
-                        type = "popular";
+                        type = Constants.POPULAR_SUBRIDDIT;
+                        if (dataChangedListener != null)
+                            dataChangedListener.OnDataChanged(type + filter);
                         return true;
 
                 }
@@ -166,6 +204,13 @@ public class MainActivity extends AppCompatActivity {
 
             isSearchOpened = true;
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (dataChangedListener != null) dataChangedListener.OnDataChanged(type + filter);
+
     }
 
     @Override

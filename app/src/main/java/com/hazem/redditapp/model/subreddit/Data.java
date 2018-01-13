@@ -4,6 +4,7 @@ package com.hazem.redditapp.model.subreddit;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Data {
@@ -16,7 +17,7 @@ public class Data {
     public String whitelistStatus;
     @SerializedName("children")
     @Expose
-    public List<Child> children = null;
+    public List<Child> children = new ArrayList<>();
     @SerializedName("after")
     @Expose
     public String after;

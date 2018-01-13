@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
 
 import com.hazem.redditapp.R;
@@ -16,7 +16,7 @@ import com.hazem.redditapp.utils.Constants;
  * On 1/12/2018.
  */
 
-public class ViewPagerAdapter extends FragmentPagerAdapter {
+public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
     private Context context;
 
@@ -55,7 +55,16 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         return "";
     }
 
+    public int getItemPosition(Object item) {
+        MainFragment fragment = (MainFragment)item;
+        int position = fragment.getArguments().getInt(Constants.FRAGMENT_POSITION,-3);
 
+        if (position != -3) {
+            return position;
+        } else {
+            return POSITION_NONE;
+        }
+    }
 }
 
 
