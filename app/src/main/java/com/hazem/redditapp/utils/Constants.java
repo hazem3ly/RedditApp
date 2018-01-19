@@ -21,6 +21,7 @@ public class Constants {
             "duration=permanent&" +
             "scope=" + SCOPE;
     public static final String BASE_URL = "https://www.reddit.com/";
+    public static final String BASE_URL_OAUTH = "https://oauth.reddit.com";
 
     public static final String HOME_SUBRIDDIT = "";
     public static final String ALL_SUBRIDDIT = "r/all/";
@@ -29,6 +30,7 @@ public class Constants {
     public static final String NEW_POSTS = "new/.json";
     public static final String HOT_POSTS = "hot/.json";
     public static final String RISING_POSTS = "rising/.json";
+    public static final String TOP_POSTS = "top/.json";
     public static final String CONTROVERSIAL_POSTS = "controversial/.json";
 
     public static final int PAGES_COUNT = 4;

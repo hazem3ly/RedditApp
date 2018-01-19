@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class Subreddit {
-
+//    transient
     @SerializedName("domain")
     @Expose
     public String domain;
@@ -121,7 +121,7 @@ public class Subreddit {
     public String thumbnail;
     @SerializedName("edited")
     @Expose
-    public Boolean edited;
+    public Object edited;
     @SerializedName("link_flair_css_class")
     @Expose
     public Object linkFlairCssClass;

@@ -7,6 +7,6 @@ package com.hazem.redditapp.model;
 
 public interface DataChanged {
 
-    void OnDataChanged(String types);
+    void OnDataChanged();
 
 }

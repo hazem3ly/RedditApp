@@ -6,10 +6,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.hazem.redditapp.MainActivity;
 import com.hazem.redditapp.R;
@@ -17,6 +17,7 @@ import com.hazem.redditapp.adapters.RecyclerViewAdapter;
 import com.hazem.redditapp.model.DataChanged;
 import com.hazem.redditapp.model.subreddit.SubredditListing;
 import com.hazem.redditapp.network.RestClient;
+import com.hazem.redditapp.utils.Constants;
 
 import java.util.HashMap;
 
@@ -27,27 +28,26 @@ import retrofit2.Response;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MainFragment extends Fragment implements DataChanged {
+public class ContrSubFragment extends Fragment implements DataChanged {
 
 
     RecyclerView recycler_view;
     RecyclerViewAdapter adapter;
+    String filter = Constants.CONTROVERSIAL_POSTS;
 
-    public MainFragment() {
-        // Required empty public constructor
+    public ContrSubFragment() {
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        MainActivity.dataChangedListener = this;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_main, container, false);
+        return inflater.inflate(R.layout.fragment_contrsub, container, false);
     }
 
     @Override
@@ -58,11 +58,13 @@ public class MainFragment extends Fragment implements DataChanged {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),
                 LinearLayoutManager.VERTICAL, false);
         recycler_view.setLayoutManager(layoutManager);
+        getList();
     }
 
     public void getList() {
+        recycler_view.setVisibility(View.GONE);
         RestClient client = new RestClient();
-        retrofit2.Call<SubredditListing> call = client.getApi_service().loadSubreddits("",new HashMap<String, String>());
+        Call<SubredditListing> call = client.getApi_service().loadSubreddits(MainActivity.type + filter,new HashMap<String, String>());
         call.enqueue(new Callback<SubredditListing>() {
             @Override
             public void onResponse(Call<SubredditListing> call, Response<SubredditListing> response) {
@@ -74,20 +76,34 @@ public class MainFragment extends Fragment implements DataChanged {
 
             @Override
             public void onFailure(Call<SubredditListing> call, Throwable t) {
+                Log.d("","");
 
             }
         });
     }
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if (isVisibleToUser) MainActivity.dataChangedListener = this;
+
+        OnDataChanged();
+
+    }
 
     private void updateViews(SubredditListing subredditListing) {
-        Toast.makeText(getContext(), "Finished Loading", Toast.LENGTH_SHORT).show();
         adapter = new RecyclerViewAdapter(subredditListing);
-        recycler_view.setAdapter(adapter);
+        if (recycler_view != null) {
+            recycler_view.setVisibility(View.VISIBLE);
+            recycler_view.setAdapter(adapter);
+
+        }
     }
 
     @Override
     public void OnDataChanged() {
-        Toast.makeText(getContext(), "Start Loading", Toast.LENGTH_SHORT).show();
-        getList();
+        if (isVisible()) {
+            getList();
+        }
     }
 }

@@ -1,5 +1,7 @@
 package com.hazem.redditapp.network;
 
+import com.hazem.redditapp.utils.Constants;
+
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -14,8 +16,9 @@ public class RestClient {
 
     public RestClient() {
 
+
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://www.reddit.com/")
+                .baseUrl(Constants.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

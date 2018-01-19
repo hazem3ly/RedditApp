@@ -22,7 +22,7 @@ public class StarterActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_starter);
 
-        sessionManager = new SessionManager(this);
+        sessionManager = App.getInstance().getCurrentSession();
 
         login = findViewById(R.id.login);
         login.setOnClickListener(new View.OnClickListener() {

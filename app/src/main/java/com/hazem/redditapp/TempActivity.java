@@ -16,7 +16,7 @@ public class TempActivity extends Activity {
     protected void onStart() {
         super.onStart();
 
-        SessionManager sessionManager = new SessionManager(this);
+        SessionManager sessionManager = App.getInstance().getCurrentSession();
 
         if (sessionManager.isFirstTime()) Navigator.navigateToActivity(this, StarterActivity.class);
         else Navigator.navigateToActivity(this, MainActivity.class);

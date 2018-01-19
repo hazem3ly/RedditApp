@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -22,83 +24,51 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.hazem.redditapp.fragments.MainFragment;
+import com.hazem.redditapp.adapters.ViewPagerAdapter;
+import com.hazem.redditapp.fragments.ContrSubFragment;
+import com.hazem.redditapp.fragments.HotSubFragment;
+import com.hazem.redditapp.fragments.NewSubFragment;
+import com.hazem.redditapp.fragments.RisingSubFragment;
+import com.hazem.redditapp.fragments.TopSubFragment;
 import com.hazem.redditapp.model.DataChanged;
 import com.hazem.redditapp.utils.Constants;
 import com.hazem.redditapp.utils.Navigator;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
 
     public static DataChanged dataChangedListener;
-    private ActionBar actionBar;
+    ViewPager viewPager;
     private MenuItem mSearchAction;
     private boolean isSearchOpened = false;
-    private EditText edtSeach;
-    private TabLayout tabs;
-    private BottomNavigationView navigation;
-
-    private String type = Constants.HOME_SUBRIDDIT;
-    private String filter = Constants.HOT_POSTS;
+    private EditText edtSearch;
+    public static String type = Constants.HOME_SUBRIDDIT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         }
+        setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitleTextColor(Color.WHITE);
-        setSupportActionBar(toolbar);
+        initialToolbar();
 
-        actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setTitle(getString(R.string.app_name));
-        }
+        initialViewPager();
 
+        initialTabs();
 
-        Navigator.replaceFragmentInView(getSupportFragmentManager(), new MainFragment(), R.id.mFrame);
+        initialBottomNavigationView();
 
-        tabs = findViewById(R.id.tabs);
-        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
+    }
 
-                switch (tab.getPosition()) {
-                    case 0:
-                        filter = Constants.HOT_POSTS;
-                        break;
-                    case 1:
-                        filter = Constants.NEW_POSTS;
-                        break;
-                    case 2:
-                        filter = Constants.RISING_POSTS;
-                        break;
-                    case 3:
-                        filter = Constants.CONTROVERSIAL_POSTS;
-                        break;
-                }
+    private void initialBottomNavigationView() {
 
-                if (dataChangedListener != null) dataChangedListener.OnDataChanged(type + filter);
-
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-                onTabSelected(tab);
-            }
-        });
-
-        navigation = findViewById(R.id.navigation);
+        BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -107,17 +77,17 @@ public class MainActivity extends AppCompatActivity {
                         // when click on home change type string to home
                         type = Constants.HOME_SUBRIDDIT;
                         if (dataChangedListener != null)
-                            dataChangedListener.OnDataChanged(type + filter);
+                            dataChangedListener.OnDataChanged();
                         return true;
                     case R.id.all_subreddits:
                         type = Constants.ALL_SUBRIDDIT;
                         if (dataChangedListener != null)
-                            dataChangedListener.OnDataChanged(type + filter);
+                            dataChangedListener.OnDataChanged();
                         return true;
                     case R.id.popular_subreddits:
                         type = Constants.POPULAR_SUBRIDDIT;
                         if (dataChangedListener != null)
-                            dataChangedListener.OnDataChanged(type + filter);
+                            dataChangedListener.OnDataChanged();
                         return true;
 
                 }
@@ -125,6 +95,41 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    private void initialToolbar() {
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitleTextColor(Color.WHITE);
+        setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(getString(R.string.app_name));
+        }
+    }
+
+    private void initialViewPager() {
+
+        ArrayList<Fragment> fragments = new ArrayList<>();
+        fragments.add(new HotSubFragment());
+        fragments.add(new NewSubFragment());
+        fragments.add(new RisingSubFragment());
+        fragments.add(new ContrSubFragment());
+        fragments.add(new TopSubFragment());
+
+
+        viewPager = findViewById(R.id.view_pager);
+        ViewPagerAdapter adapter = new ViewPagerAdapter(this, getSupportFragmentManager(), fragments);
+        viewPager.setAdapter(adapter);
+
+    }
+
+    private void initialTabs() {
+
+        TabLayout tabs = findViewById(R.id.tabs);
+        tabs.setupWithViewPager(viewPager);
 
     }
 
@@ -147,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
                 handleMenuSearch();
                 break;
             case R.id.profile:
-                Toast.makeText(this, "Profile Selected", Toast.LENGTH_SHORT).show();
+                Navigator.navigateToActivity(this,UserActivity.class);
                 break;
         }
         return true;
@@ -163,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
 
             //hides the keyboard
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(edtSeach.getWindowToken(), 0);
+            imm.hideSoftInputFromWindow(edtSearch.getWindowToken(), 0);
 
             //add the search icon in the action bar
             mSearchAction.setIcon(getResources().getDrawable(R.drawable.ic_search_black_24dp));
@@ -176,14 +181,14 @@ public class MainActivity extends AppCompatActivity {
             action.setCustomView(R.layout.search_bar);//add the custom view
             action.setDisplayShowTitleEnabled(false); //hide the title
 
-            edtSeach = (EditText) action.getCustomView().findViewById(R.id.edtSearch); //the text editor
+            edtSearch = (EditText) action.getCustomView().findViewById(R.id.edtSearch); //the text editor
 
             //this is a listener to do a search when the user clicks on search button
-            edtSeach.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            edtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                     if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                        String s = edtSeach.getText().toString();
+                        String s = edtSearch.getText().toString();
                         Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
                         return true;
                     }
@@ -192,11 +197,11 @@ public class MainActivity extends AppCompatActivity {
             });
 
 
-            edtSeach.requestFocus();
+            edtSearch.requestFocus();
 
             //open the keyboard focused in the edtSearch
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.showSoftInput(edtSeach, InputMethodManager.SHOW_IMPLICIT);
+            imm.showSoftInput(edtSearch, InputMethodManager.SHOW_IMPLICIT);
 
 
             //add the close icon
@@ -209,7 +214,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (dataChangedListener != null) dataChangedListener.OnDataChanged(type + filter);
 
     }
 
