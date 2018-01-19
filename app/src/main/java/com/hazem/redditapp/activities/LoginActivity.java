@@ -1,4 +1,4 @@
-package com.hazem.redditapp;
+package com.hazem.redditapp.activities;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,6 +9,8 @@ import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.hazem.redditapp.App;
+import com.hazem.redditapp.R;
 import com.hazem.redditapp.model.AccessToken;
 import com.hazem.redditapp.network.RestClient;
 import com.hazem.redditapp.utils.Constants;

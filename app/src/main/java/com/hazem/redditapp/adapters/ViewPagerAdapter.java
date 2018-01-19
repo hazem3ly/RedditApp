@@ -1,15 +1,12 @@
 package com.hazem.redditapp.adapters;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
 
 import com.hazem.redditapp.R;
-import com.hazem.redditapp.fragments.MainFragment;
-import com.hazem.redditapp.utils.Constants;
 
 import java.util.List;
 
@@ -32,19 +29,13 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         Log.d("Position ", String.valueOf(position));
-        MainFragment mainFragment = new MainFragment();
-        Bundle data = new Bundle();
-        data.putInt(Constants.FRAGMENT_POSITION, position);
-        mainFragment.setArguments(data);
-//        return mainFragment;
+
 
         return fragmentList.get(position);
     }
 
     @Override
     public int getCount() {
-//        return Constants.PAGES_COUNT;
-
         return fragmentList.size();
     }
 

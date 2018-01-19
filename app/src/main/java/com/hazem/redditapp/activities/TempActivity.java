@@ -1,7 +1,8 @@
-package com.hazem.redditapp;
+package com.hazem.redditapp.activities;
 
 import android.app.Activity;
 
+import com.hazem.redditapp.App;
 import com.hazem.redditapp.utils.Navigator;
 import com.hazem.redditapp.utils.SessionManager;
 

@@ -1,9 +1,8 @@
 package com.hazem.redditapp.network;
 
 
-import android.database.Observable;
-
 import com.hazem.redditapp.model.AccessToken;
+import com.hazem.redditapp.model.RefreshToken;
 import com.hazem.redditapp.model.subreddit.SubredditListing;
 import com.hazem.redditapp.model.user_details_mode.UserRequest;
 import com.hazem.redditapp.utils.Constants;
@@ -32,11 +31,11 @@ public interface Api_Service {
                                           @Field("grant_type") String grant_type,
                                           @Field("code") String code,
                                           @Field("redirect_uri") String redirectUti);
-
+    @FormUrlEncoded
     @POST(Constants.ACCESS_TOKEN_URL)
-    Observable<AccessToken> refreshToken(@Header("Authorization") String authorization,
-                                         @Field("grant_type") String grant_type,
-                                         @Field("refresh_token") String refresh_token);
+    Call<RefreshToken> refreshToken(@Header("Authorization") String authorization,
+                                    @Field("grant_type") String grant_type,
+                                    @Field("refresh_token") String refresh_token);
 
 
     @GET(Constants.BASE_URL + "/{subreddit}")

@@ -1,4 +1,4 @@
-package com.hazem.redditapp;
+package com.hazem.redditapp.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +7,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
+import com.hazem.redditapp.App;
+import com.hazem.redditapp.R;
 import com.hazem.redditapp.utils.Navigator;
 import com.hazem.redditapp.utils.SessionManager;
 

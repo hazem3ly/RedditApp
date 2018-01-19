@@ -1,4 +1,4 @@
-package com.hazem.redditapp;
+package com.hazem.redditapp.activities;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -24,6 +24,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hazem.redditapp.R;
 import com.hazem.redditapp.adapters.ViewPagerAdapter;
 import com.hazem.redditapp.fragments.ContrSubFragment;
 import com.hazem.redditapp.fragments.HotSubFragment;

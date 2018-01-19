@@ -4,26 +4,24 @@ package com.hazem.redditapp.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
-import com.hazem.redditapp.MainActivity;
+import com.hazem.redditapp.App;
 import com.hazem.redditapp.R;
+import com.hazem.redditapp.RedditApi;
+import com.hazem.redditapp.activities.MainActivity;
 import com.hazem.redditapp.adapters.RecyclerViewAdapter;
 import com.hazem.redditapp.model.DataChanged;
 import com.hazem.redditapp.model.subreddit.SubredditListing;
-import com.hazem.redditapp.network.RestClient;
 import com.hazem.redditapp.utils.Constants;
-
-import java.util.HashMap;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.hazem.redditapp.utils.SessionManager;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,25 +33,51 @@ public class RisingSubFragment extends Fragment implements DataChanged {
     RecyclerViewAdapter adapter;
     String filter = Constants.RISING_POSTS;
 
+    SwipeRefreshLayout swipe_refresh;
+    ProgressBar progressBar;
+    TextView error_load_text;
+
+    SessionManager sessionManager;
+
+
     public RisingSubFragment() {
     }
+
 
     @Override
     public void onStart() {
         super.onStart();
+        sessionManager = App.getInstance().getCurrentSession();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_risingsub, container, false);
+        return inflater.inflate(R.layout.fragment_subreddits, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        swipe_refresh = view.findViewById(R.id.swipe_refresh);
+        swipe_refresh.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        getList();
+                    }
+                }
+        );
+        progressBar = view.findViewById(R.id.progress_bar);
+        error_load_text = view.findViewById(R.id.error_load_text);
+        error_load_text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getList();
+            }
+        });
         recycler_view = view.findViewById(R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),
                 LinearLayoutManager.VERTICAL, false);
@@ -62,24 +86,20 @@ public class RisingSubFragment extends Fragment implements DataChanged {
     }
 
     public void getList() {
-        recycler_view.setVisibility(View.GONE);
-        RestClient client = new RestClient();
-        Call<SubredditListing> call = client.getApi_service().loadSubreddits(MainActivity.type + filter,new HashMap<String, String>());
-        call.enqueue(new Callback<SubredditListing>() {
+        showProgress(true, false);
+
+        RedditApi.getSubredditList(filter, new RedditApi.OnDataReady() {
             @Override
-            public void onResponse(Call<SubredditListing> call, Response<SubredditListing> response) {
-                if (response.isSuccessful()) {
-                    SubredditListing subredditListing = response.body();
-                    if (subredditListing != null) updateViews(subredditListing);
-                }
+            public void OnResponseSuccessfully(SubredditListing subredditListing) {
+                updateViews(subredditListing);
             }
 
             @Override
-            public void onFailure(Call<SubredditListing> call, Throwable t) {
-                Log.d("","");
-
+            public void OnFailure() {
+                showProgress(false, false);
             }
         });
+
     }
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -90,11 +110,24 @@ public class RisingSubFragment extends Fragment implements DataChanged {
 
 
     }
+    private void showProgress(boolean isProgress, boolean loadedSuccessfully) {
+
+        if (swipe_refresh.isRefreshing()&& !isProgress) {
+            swipe_refresh.setRefreshing(false);
+        }
+
+        progressBar.setVisibility(isProgress ? View.VISIBLE : View.GONE);
+
+        recycler_view.setVisibility((!isProgress && loadedSuccessfully) ? View.VISIBLE : View.GONE);
+
+        error_load_text.setVisibility((!isProgress && !loadedSuccessfully) ? View.VISIBLE : View.GONE);
+
+    }
 
     private void updateViews(SubredditListing subredditListing) {
-        adapter = new RecyclerViewAdapter(subredditListing);
+        adapter = new RecyclerViewAdapter(getContext(),subredditListing);
         if (recycler_view != null) {
-            recycler_view.setVisibility(View.VISIBLE);
+            showProgress(false, true);
             recycler_view.setAdapter(adapter);
 
         }

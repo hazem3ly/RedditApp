@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
-import com.hazem.redditapp.TempActivity;
+import com.hazem.redditapp.activities.TempActivity;
 
 import java.util.Calendar;
 
@@ -101,6 +101,10 @@ public class SessionManager {
         return null;
     }
 
+    public String getRefreshToken(){
+        return pref.getString(REFRES_HTOKEN,"");
+    }
+
     /**
      * Quick check for login
      **/
@@ -118,4 +122,11 @@ public class SessionManager {
         editor.apply();
     }
 
+    public void updateAccessToken(String accessToken) {
+        editor.putString(ACCESS_TOKEN,accessToken);
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.HOUR, 1);
+        editor.putLong(LOGIN_TIME, calendar.getTimeInMillis());
+        editor.apply();
+    }
 }

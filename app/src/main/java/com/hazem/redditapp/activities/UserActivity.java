@@ -1,9 +1,11 @@
-package com.hazem.redditapp;
+package com.hazem.redditapp.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.hazem.redditapp.App;
+import com.hazem.redditapp.R;
 import com.hazem.redditapp.model.user_details_mode.UserRequest;
 import com.hazem.redditapp.network.UserDetailsTask;
 import com.hazem.redditapp.utils.SessionManager;
