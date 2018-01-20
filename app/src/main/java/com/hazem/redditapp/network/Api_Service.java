@@ -3,10 +3,12 @@ package com.hazem.redditapp.network;
 
 import com.hazem.redditapp.model.AccessToken;
 import com.hazem.redditapp.model.RefreshToken;
+import com.hazem.redditapp.model.post.PostListing;
 import com.hazem.redditapp.model.subreddit.SubredditListing;
 import com.hazem.redditapp.model.user_details_mode.UserRequest;
 import com.hazem.redditapp.utils.Constants;
 
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -31,6 +33,7 @@ public interface Api_Service {
                                           @Field("grant_type") String grant_type,
                                           @Field("code") String code,
                                           @Field("redirect_uri") String redirectUti);
+
     @FormUrlEncoded
     @POST(Constants.ACCESS_TOKEN_URL)
     Call<RefreshToken> refreshToken(@Header("Authorization") String authorization,
@@ -44,12 +47,18 @@ public interface Api_Service {
 
     @GET(Constants.BASE_URL_OAUTH + "/{sortBy}")
     Call<SubredditListing> loadHomeSubreddits(@Header("Authorization") String authorization,
-                                             @Path(value = "sortBy") String sortBy,
-                                             @QueryMap Map<String, String> options);
+                                              @Path(value = "sortBy") String sortBy,
+                                              @QueryMap Map<String, String> options);
 
 
     @GET(Constants.BASE_URL_OAUTH + "/api/v1/me")
     Call<UserRequest> getUserDetails(@Header("Authorization") String authorization);
+
+
+    @GET(Constants.BASE_URL + "/r/{subbreddit_name}/comments/{id}/.json")
+    Call<List<PostListing>> loadPostDetails(@Path(value = "subbreddit_name") String subreddit_name,
+                                           @Path(value = "id") String postId);
+
 
 
 }

@@ -88,8 +88,8 @@ public class ContrSubFragment extends Fragment implements DataChanged {
 
         RedditApi.getSubredditList(filter, new RedditApi.OnDataReady() {
             @Override
-            public void OnResponseSuccessfully(SubredditListing subredditListing) {
-                updateViews(subredditListing);
+            public void OnResponseSuccessfully(Object subredditListing) {
+                updateViews((SubredditListing) subredditListing);
             }
 
             @Override

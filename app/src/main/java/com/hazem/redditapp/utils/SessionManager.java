@@ -64,7 +64,7 @@ public class SessionManager {
      * Clear session details
      */
     public void logoutUser() {
-        // Clearing all data from Shared Preferences
+        // Clearing all postData from Shared Preferences
         editor.clear();
         editor.commit();
 

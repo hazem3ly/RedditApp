@@ -37,4 +37,7 @@ public class Constants {
     public static final String FRAGMENT_POSITION = "position";
 
 
+    public static final String POST_URL = "post_detail_url";
+    public static final String POST_ID = "post_detail_id";
+    public static final String POST_SUBREDDIT_NAME = "post_detail_subreddit";
 }

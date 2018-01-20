@@ -25,7 +25,8 @@
         </activity>
         <activity android:name=".activities.LoginActivity" />
         <activity android:name=".activities.StarterActivity" />
-        <activity android:name=".activities.UserActivity"/>
+        <activity android:name=".activities.UserActivity" />
+        <activity android:name=".activities.PostDetailsActivity"></activity>
     </application>
 
 </manifest>

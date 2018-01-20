@@ -2,6 +2,7 @@ package com.hazem.redditapp.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +14,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hazem.redditapp.R;
+import com.hazem.redditapp.activities.PostDetailsActivity;
 import com.hazem.redditapp.model.subreddit.Child;
 import com.hazem.redditapp.model.subreddit.SubredditListing;
+import com.hazem.redditapp.utils.Constants;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -92,6 +95,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         .placeholder(R.drawable.images)
                         .error(R.drawable.logo)
                         .into(post_poster);
+
+            post_poster.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(child.data.url));
+                    context.startActivity(browserIntent);
+                }
+            });
+
             up_vote.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -106,6 +118,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             });
             vote_count.setText(String.valueOf(child.data.score));
             comment_count.setText(String.valueOf(child.data.numComments));
+            comments_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    context.startActivity(new Intent(context, PostDetailsActivity.class)
+                            .putExtra(Constants.POST_ID, child.data.id)
+                            .putExtra(Constants.POST_SUBREDDIT_NAME, child.data.subreddit));
+                }
+            });
             share_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -114,8 +134,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, context.getString(R.string.app_name));
                     sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, child.data.title);
                     context.startActivity(Intent.createChooser(sharingIntent, "Share via"));
-
-
                 }
             });
         }

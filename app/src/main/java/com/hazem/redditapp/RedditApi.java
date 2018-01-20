@@ -5,12 +5,14 @@ import android.util.Base64;
 
 import com.hazem.redditapp.activities.MainActivity;
 import com.hazem.redditapp.model.RefreshToken;
+import com.hazem.redditapp.model.post.PostListing;
 import com.hazem.redditapp.model.subreddit.SubredditListing;
 import com.hazem.redditapp.network.RestClient;
 import com.hazem.redditapp.utils.Constants;
 import com.hazem.redditapp.utils.SessionManager;
 
 import java.util.HashMap;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -55,15 +57,15 @@ public class RedditApi {
                     if (refreshToken != null) {
                         sessionManager.updateAccessToken(refreshToken.accessToken);
                         getSubredditList(filter, onDataReadyListener);
-                    }else {
-                        if (onDataReadyListener!=null) onDataReadyListener.OnFailure();
+                    } else {
+                        if (onDataReadyListener != null) onDataReadyListener.OnFailure();
                     }
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<RefreshToken> call, @NonNull Throwable t) {
-                if (onDataReadyListener!=null) onDataReadyListener.OnFailure();
+                if (onDataReadyListener != null) onDataReadyListener.OnFailure();
             }
         });
 
@@ -119,8 +121,32 @@ public class RedditApi {
         });
     }
 
+    public static void loadPostDetails(String postId,String subredditName, final OnDataReady onDataReadyListener) {
+        RestClient client = new RestClient();
+
+        Call<List<PostListing>> call = client.getApi_service().loadPostDetails(subredditName,postId);
+        call.enqueue(new Callback<List<PostListing>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<PostListing>> call, @NonNull Response<List<PostListing>> response) {
+                if (response.isSuccessful()){
+                    List<PostListing> postListing = response.body();
+                    if (postListing !=null){
+                        if (onDataReadyListener != null)
+                            onDataReadyListener.OnResponseSuccessfully(postListing);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<PostListing>> call, @NonNull Throwable t) {
+                if (onDataReadyListener != null)
+                    onDataReadyListener.OnFailure();
+            }
+        });
+    }
+
     public interface OnDataReady {
-        void OnResponseSuccessfully(SubredditListing subredditListing);
+        void OnResponseSuccessfully(Object result);
 
         void OnFailure();
     }
