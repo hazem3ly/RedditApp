@@ -11,6 +11,6 @@ public class Child {
     public String kind;
     @SerializedName("data")
     @Expose
-    public Data_ data;
+    public PostDetailsAndComments data;
 
 }

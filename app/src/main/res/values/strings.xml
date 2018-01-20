@@ -16,4 +16,7 @@
     <string name="loading">Loading…</string>
     <string name="error_loading_subreddits">Error Loading Subreddits \n Tap To Refresh</string>
     <string name="share_text">Share</string>
+    <string name="add_comment">Add Comment…</string>
+    <string name="comments_label">Comments.</string>
+    <string name="error_loading_post">Error Loading Post Details \n Tap To Refresh</string>
 </resources>

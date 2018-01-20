@@ -5,9 +5,6 @@ import com.google.gson.annotations.SerializedName;
 
 public class PostListing {
 
-
-//    List<Response> responses = new ArrayList<>();
-
     @SerializedName("kind")
     @Expose
     public String kind;

@@ -1,9 +1,10 @@
 
 package com.hazem.redditapp.model.post;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 public class Image {
 
@@ -13,9 +14,7 @@ public class Image {
     @SerializedName("resolutions")
     @Expose
     public List<Resolution> resolutions = null;
-    @SerializedName("variants")
-    @Expose
-    public Variants variants;
+
     @SerializedName("id")
     @Expose
     public String id;

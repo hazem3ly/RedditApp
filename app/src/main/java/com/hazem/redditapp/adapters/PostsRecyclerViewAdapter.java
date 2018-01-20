@@ -25,24 +25,24 @@ import com.squareup.picasso.Picasso;
  * On 1/13/2018.
  */
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostsRecyclerViewAdapter.ViewHolder> {
 
     private SubredditListing subredditListing;
     private Context context;
 
-    public RecyclerViewAdapter(Context context, SubredditListing subredditListing) {
+    public PostsRecyclerViewAdapter(Context context, SubredditListing subredditListing) {
         this.context = context;
         this.subredditListing = subredditListing;
     }
 
     @Override
-    public RecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public PostsRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.subreddit_post_item, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(RecyclerViewAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(PostsRecyclerViewAdapter.ViewHolder holder, int position) {
         Child child = subredditListing.data.children.get(position);
         holder.BindData(child);
     }
@@ -82,16 +82,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             post_owner_user_name.setText(String.valueOf(child.data.author));
             post_title.setText(String.valueOf(child.data.title));
             String imageUrl;
+
             try {
-                if (child.data.preview.enabled) {
-                    imageUrl = child.data.preview.images.get(0).source.url;
-                } else imageUrl = "";
+                imageUrl = child.data.preview.images.get(0).source.url;
             } catch (Exception e) {
                 imageUrl = "";
             }
             if (!imageUrl.isEmpty())
                 Picasso.with(context)
                         .load(imageUrl)
+                        .resize(300, 140)
                         .placeholder(R.drawable.images)
                         .error(R.drawable.logo)
                         .into(post_poster);
@@ -116,7 +116,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     Toast.makeText(context, "down", Toast.LENGTH_SHORT).show();
                 }
             });
-            vote_count.setText(String.valueOf(child.data.score));
+
+            String c = String.valueOf(child.data.score);
+            int count = child.data.score;
+            if (count > 1000) {
+                c = String.valueOf(count / 1000) + "K";
+            }
+            vote_count.setText(c);
+
+
             comment_count.setText(String.valueOf(child.data.numComments));
             comments_btn.setOnClickListener(new View.OnClickListener() {
                 @Override

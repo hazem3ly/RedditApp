@@ -17,7 +17,7 @@ import com.hazem.redditapp.App;
 import com.hazem.redditapp.R;
 import com.hazem.redditapp.RedditApi;
 import com.hazem.redditapp.activities.MainActivity;
-import com.hazem.redditapp.adapters.RecyclerViewAdapter;
+import com.hazem.redditapp.adapters.PostsRecyclerViewAdapter;
 import com.hazem.redditapp.model.DataChanged;
 import com.hazem.redditapp.model.subreddit.SubredditListing;
 import com.hazem.redditapp.utils.Constants;
@@ -30,7 +30,7 @@ public class ContrSubFragment extends Fragment implements DataChanged {
 
 
     RecyclerView recycler_view;
-    RecyclerViewAdapter adapter;
+    PostsRecyclerViewAdapter adapter;
     String filter = Constants.CONTROVERSIAL_POSTS;
 
     SwipeRefreshLayout swipe_refresh;
@@ -123,7 +123,7 @@ public class ContrSubFragment extends Fragment implements DataChanged {
     }
 
     private void updateViews(SubredditListing subredditListing) {
-        adapter = new RecyclerViewAdapter(getContext(),subredditListing);
+        adapter = new PostsRecyclerViewAdapter(getContext(),subredditListing);
         if (recycler_view != null) {
             showProgress(false, true);
             recycler_view.setAdapter(adapter);
