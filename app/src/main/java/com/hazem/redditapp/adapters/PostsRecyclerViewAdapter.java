@@ -1,5 +1,6 @@
 package com.hazem.redditapp.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hazem.redditapp.R;
+import com.hazem.redditapp.RedditApi;
 import com.hazem.redditapp.activities.PostDetailsActivity;
 import com.hazem.redditapp.model.subreddit.Child;
 import com.hazem.redditapp.model.subreddit.SubredditListing;
@@ -25,7 +27,7 @@ import com.squareup.picasso.Picasso;
  * On 1/13/2018.
  */
 
-public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostsRecyclerViewAdapter.ViewHolder> {
+public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostsRecyclerViewAdapter.ViewHolder> implements RedditApi.CallbackListener {
 
     private SubredditListing subredditListing;
     private Context context;
@@ -51,7 +53,13 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostsRecycler
     public int getItemCount() {
         return subredditListing.data.children.size();
     }
-
+    @Override
+    public void OnResult(boolean success) {
+        if (context instanceof Activity) {
+            Toast.makeText(context, success ? context.getString(R.string.voted)
+                    :context.getString(R.string.failed), Toast.LENGTH_SHORT).show();
+        }
+    }
     class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView subreddit_name, post_owner_user_name, post_title, vote_count, comment_count;
@@ -90,8 +98,8 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostsRecycler
             }
             if (!imageUrl.isEmpty())
                 Picasso.with(context)
-                        .load(imageUrl)
-                        .resize(300, 140)
+                        .load(imageUrl).fit()
+//                        .resize(300, 140)
                         .placeholder(R.drawable.images)
                         .error(R.drawable.logo)
                         .into(post_poster);
@@ -107,13 +115,21 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostsRecycler
             up_vote.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context, "up", Toast.LENGTH_SHORT).show();
+                    if (child.data.likes == null)
+                        RedditApi.votePost(RedditApi.VOTE_UP, child.data.name,PostsRecyclerViewAdapter.this);
+                    else if (!(Boolean) child.data.likes) {
+                        RedditApi.votePost(RedditApi.VOTE_UP, child.data.name,PostsRecyclerViewAdapter.this);
+                    } else RedditApi.votePost(RedditApi.UN_VOTE, child.data.name,PostsRecyclerViewAdapter.this);
                 }
             });
             down_vote.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context, "down", Toast.LENGTH_SHORT).show();
+                    if (child.data.likes == null)
+                        RedditApi.votePost(RedditApi.VOTE_DOWN, child.data.name,PostsRecyclerViewAdapter.this);
+                    else if ((Boolean)child.data.likes) {
+                        RedditApi.votePost(RedditApi.VOTE_DOWN, child.data.name,PostsRecyclerViewAdapter.this);
+                    } else RedditApi.votePost(RedditApi.VOTE_DOWN, child.data.name,PostsRecyclerViewAdapter.this);
                 }
             });
 

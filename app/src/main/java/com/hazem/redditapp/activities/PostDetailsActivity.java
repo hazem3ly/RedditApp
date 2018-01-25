@@ -1,5 +1,6 @@
 package com.hazem.redditapp.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -9,8 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -20,16 +24,18 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hazem.redditapp.App;
 import com.hazem.redditapp.R;
 import com.hazem.redditapp.RedditApi;
 import com.hazem.redditapp.adapters.CommentsRecyclerViewAdapter;
 import com.hazem.redditapp.model.post.PostListing;
 import com.hazem.redditapp.utils.Constants;
+import com.hazem.redditapp.utils.SessionManager;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class PostDetailsActivity extends AppCompatActivity {
+public class PostDetailsActivity extends AppCompatActivity implements RedditApi.CallbackListener {
 
     ImageButton open_in_new, up_vote, down_vote;
     ImageView post_poster;
@@ -37,12 +43,14 @@ public class PostDetailsActivity extends AppCompatActivity {
     LinearLayout container, share_btn;
     RecyclerView comments_list;
     EditText add_comment_et;
+    ImageButton add_comment_btn;
     ProgressBar progressBar;
     ActionBar actionBar;
     CommentsRecyclerViewAdapter adapter;
 
     ScrollView scrollView;
     LinearLayout comment_btn;
+    private PostListing postData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,13 +67,45 @@ public class PostDetailsActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.details_menu, menu);
+        return true;
+
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 return true;
+            case R.id.save:
+                savePost();
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void OnResult(boolean success) {
+        Toast.makeText(this, success ? getString(R.string.voted)
+                : getString(R.string.failed), Toast.LENGTH_SHORT).show();
+
+    }
+
+    private void savePost() {
+        if (postData != null) {
+            RedditApi.saveUnSaveThing(postData.data.children.get(0).data.name, true, new RedditApi.CallbackListener() {
+                @Override
+                public void OnResult(boolean success) {
+                    Toast.makeText(PostDetailsActivity.this, success ? getString(R.string.saved)
+                            : getString(R.string.failed), Toast.LENGTH_SHORT).show();
+
+                }
+            });
+        }
     }
 
     private void initialToolbar() {
@@ -124,6 +164,9 @@ public class PostDetailsActivity extends AppCompatActivity {
     }
 
     private void updatePostData(final PostListing postData) {
+
+        this.postData = postData;
+
         open_in_new.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -147,20 +190,32 @@ public class PostDetailsActivity extends AppCompatActivity {
         if (!imageUrl.isEmpty())
             Picasso.with(this)
                     .load(imageUrl)
-                    .resize(350, 150)
+//                    .resize(350, 150)
+                    .fit()
                     .placeholder(R.drawable.images)
                     .error(R.drawable.logo)
                     .into(post_poster);
+
         up_vote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(PostDetailsActivity.this, "up", Toast.LENGTH_SHORT).show();
+                if (postData.data.children.get(0).data.likes == null)
+                    RedditApi.votePost(RedditApi.VOTE_UP, postData.data.children.get(0).data.name, PostDetailsActivity.this);
+                else if (!((Boolean) postData.data.children.get(0).data.likes)) {
+                    RedditApi.votePost(RedditApi.VOTE_UP, postData.data.children.get(0).data.name, PostDetailsActivity.this);
+                } else
+                    RedditApi.votePost(RedditApi.UN_VOTE, postData.data.children.get(0).data.name, PostDetailsActivity.this);
             }
         });
         down_vote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(PostDetailsActivity.this, "down", Toast.LENGTH_SHORT).show();
+                if (postData.data.children.get(0).data.likes == null)
+                    RedditApi.votePost(RedditApi.VOTE_DOWN, postData.data.children.get(0).data.name, PostDetailsActivity.this);
+                else if (((Boolean) postData.data.children.get(0).data.likes)) {
+                    RedditApi.votePost(RedditApi.VOTE_DOWN, postData.data.children.get(0).data.name, PostDetailsActivity.this);
+                } else
+                    RedditApi.votePost(RedditApi.VOTE_DOWN, postData.data.children.get(0).data.name, PostDetailsActivity.this);
             }
         });
 
@@ -220,11 +275,48 @@ public class PostDetailsActivity extends AppCompatActivity {
             }
         });
         add_comment_et = findViewById(R.id.add_comment_et);
+        add_comment_btn = findViewById(R.id.add_comment_btn);
+        add_comment_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (add_comment_et.getText().toString().isEmpty()) {
+                    Toast.makeText(PostDetailsActivity.this,
+                            getString(R.string.empty_string_error), Toast.LENGTH_SHORT).show();
+                } else if (App.getInstance().getCurrentSession().getAuthorizationKey().equals(SessionManager.USER_NOT_LOGIN)) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (imm != null) {
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    }
+                    Toast.makeText(PostDetailsActivity.this, getString(R.string.user_not_logged), Toast.LENGTH_SHORT).show();
+                } else {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (imm != null) {
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    }
+                    addComment();
+                }
+            }
+        });
 
         comments_list = findViewById(R.id.comments_list);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL, false);
         comments_list.setLayoutManager(layoutManager);
 
+    }
+
+    private void addComment() {
+        if (postData == null) return;
+        RedditApi.commentToThing(postData.data.children.get(0).data.name, add_comment_et.getText().toString(),
+                new RedditApi.CallbackListener() {
+                    @Override
+                    public void OnResult(boolean success) {
+                        add_comment_et.getText().clear();
+                        Toast.makeText(PostDetailsActivity.this,
+                                success ? getString(R.string.comment_success) :
+                                        getString(R.string.error_comment), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

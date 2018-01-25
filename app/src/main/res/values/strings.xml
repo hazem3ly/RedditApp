@@ -19,4 +19,12 @@
     <string name="add_comment">Add Comment…</string>
     <string name="comments_label">Comments.</string>
     <string name="error_loading_post">Error Loading Post Details \n Tap To Refresh</string>
+    <string name="save">Save</string>
+    <string name="failed">Failed</string>
+    <string name="voted">Vote Success</string>
+    <string name="saved">Save Success</string>
+    <string name="empty_string_error">Error Empty Comment</string>
+    <string name="user_not_logged">User Not Login</string>
+    <string name="comment_success">Comment Add Successfully</string>
+    <string name="error_comment">Error While Adding Comment</string>
 </resources>

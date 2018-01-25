@@ -53,6 +53,7 @@
                 android:id="@+id/reply_btn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:background="@drawable/vote_up_item_color"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:padding="10dp">
@@ -76,7 +77,7 @@
                     android:id="@+id/up_vote"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
+                    android:background="@drawable/vote_up_item_color"
                     android:padding="10dp"
                     android:src="@drawable/ic_arrow_upward_black_24dp" />
 
@@ -93,7 +94,7 @@
                     android:id="@+id/down_vote"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
+                    android:background="@drawable/vote_down_item_color"
                     android:padding="10dp"
                     android:src="@drawable/ic_arrow_downward_black_24dp" />
 
