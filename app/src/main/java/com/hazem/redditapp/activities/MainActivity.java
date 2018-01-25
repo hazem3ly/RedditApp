@@ -24,6 +24,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+import com.hazem.redditapp.App;
 import com.hazem.redditapp.R;
 import com.hazem.redditapp.adapters.ViewPagerAdapter;
 import com.hazem.redditapp.fragments.ContrSubFragment;
@@ -41,11 +44,12 @@ public class MainActivity extends AppCompatActivity {
 
 
     public static DataChanged dataChangedListener;
+    public static String type = Constants.HOME_SUBRIDDIT;
     ViewPager viewPager;
     private MenuItem mSearchAction;
     private boolean isSearchOpened = false;
     private EditText edtSearch;
-    public static String type = Constants.HOME_SUBRIDDIT;
+    private Tracker mTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +60,10 @@ public class MainActivity extends AppCompatActivity {
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         }
         setContentView(R.layout.activity_main);
+
+        mTracker = App.getInstance().getDefaultTracker();
+        mTracker.setScreenName("Main Activity --> OnCreate()");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
 
         initialToolbar();
 
@@ -153,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
                 handleMenuSearch();
                 break;
             case R.id.profile:
-                Navigator.navigateToActivity(this,UserActivity.class);
+                Navigator.navigateToActivity(this, UserActivity.class);
                 break;
         }
         return true;

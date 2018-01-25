@@ -97,22 +97,22 @@ public class CommentsRecyclerViewAdapter extends RecyclerView.Adapter<CommentsRe
                 @Override
                 public void onClick(View v) {
                     if (child.data.likes == null)
-                        RedditApi.votePost(RedditApi.VOTE_UP, child.data.name, CommentsRecyclerViewAdapter.this);
+                        RedditApi.voteThing(RedditApi.VOTE_UP, child.data.name, CommentsRecyclerViewAdapter.this);
                     else if (!(Boolean) child.data.likes) {
-                        RedditApi.votePost(RedditApi.VOTE_UP, child.data.name, CommentsRecyclerViewAdapter.this);
+                        RedditApi.voteThing(RedditApi.VOTE_UP, child.data.name, CommentsRecyclerViewAdapter.this);
                     } else
-                        RedditApi.votePost(RedditApi.UN_VOTE, child.data.name, CommentsRecyclerViewAdapter.this);
+                        RedditApi.voteThing(RedditApi.UN_VOTE, child.data.name, CommentsRecyclerViewAdapter.this);
                 }
             });
             down_vote.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (child.data.likes == null)
-                        RedditApi.votePost(RedditApi.VOTE_DOWN, child.data.name, CommentsRecyclerViewAdapter.this);
+                        RedditApi.voteThing(RedditApi.VOTE_DOWN, child.data.name, CommentsRecyclerViewAdapter.this);
                     else if ((Boolean) child.data.likes) {
-                        RedditApi.votePost(RedditApi.VOTE_DOWN, child.data.name, CommentsRecyclerViewAdapter.this);
+                        RedditApi.voteThing(RedditApi.VOTE_DOWN, child.data.name, CommentsRecyclerViewAdapter.this);
                     } else
-                        RedditApi.votePost(RedditApi.VOTE_DOWN, child.data.name, CommentsRecyclerViewAdapter.this);
+                        RedditApi.voteThing(RedditApi.VOTE_DOWN, child.data.name, CommentsRecyclerViewAdapter.this);
                 }
             });
 

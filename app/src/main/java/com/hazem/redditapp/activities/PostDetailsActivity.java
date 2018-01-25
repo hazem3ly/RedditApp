@@ -200,22 +200,22 @@ public class PostDetailsActivity extends AppCompatActivity implements RedditApi.
             @Override
             public void onClick(View v) {
                 if (postData.data.children.get(0).data.likes == null)
-                    RedditApi.votePost(RedditApi.VOTE_UP, postData.data.children.get(0).data.name, PostDetailsActivity.this);
+                    RedditApi.voteThing(RedditApi.VOTE_UP, postData.data.children.get(0).data.name, PostDetailsActivity.this);
                 else if (!((Boolean) postData.data.children.get(0).data.likes)) {
-                    RedditApi.votePost(RedditApi.VOTE_UP, postData.data.children.get(0).data.name, PostDetailsActivity.this);
+                    RedditApi.voteThing(RedditApi.VOTE_UP, postData.data.children.get(0).data.name, PostDetailsActivity.this);
                 } else
-                    RedditApi.votePost(RedditApi.UN_VOTE, postData.data.children.get(0).data.name, PostDetailsActivity.this);
+                    RedditApi.voteThing(RedditApi.UN_VOTE, postData.data.children.get(0).data.name, PostDetailsActivity.this);
             }
         });
         down_vote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (postData.data.children.get(0).data.likes == null)
-                    RedditApi.votePost(RedditApi.VOTE_DOWN, postData.data.children.get(0).data.name, PostDetailsActivity.this);
+                    RedditApi.voteThing(RedditApi.VOTE_DOWN, postData.data.children.get(0).data.name, PostDetailsActivity.this);
                 else if (((Boolean) postData.data.children.get(0).data.likes)) {
-                    RedditApi.votePost(RedditApi.VOTE_DOWN, postData.data.children.get(0).data.name, PostDetailsActivity.this);
+                    RedditApi.voteThing(RedditApi.VOTE_DOWN, postData.data.children.get(0).data.name, PostDetailsActivity.this);
                 } else
-                    RedditApi.votePost(RedditApi.VOTE_DOWN, postData.data.children.get(0).data.name, PostDetailsActivity.this);
+                    RedditApi.voteThing(RedditApi.VOTE_DOWN, postData.data.children.get(0).data.name, PostDetailsActivity.this);
             }
         });
 

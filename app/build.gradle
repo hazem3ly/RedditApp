@@ -38,4 +38,9 @@ dependencies {
     // Picasso Image Downloading
     implementation 'com.squareup.picasso:picasso:2.5.2'
 
+    // Google Services
+    implementation 'com.google.android.gms:play-services-ads:11.8.0'
+    implementation 'com.google.android.gms:play-services-analytics:11.8.0'
+
+
 }

@@ -1,0 +1,74 @@
+{
+  "project_info": {
+    "project_number": "788005629051",
+    "project_id": "salatyapp-1485943478252"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:788005629051:android:b69461455022b211",
+        "android_client_info": {
+          "package_name": "com.linkatapps.googlelogin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "788005629051-k3umrg1r3n5fdemdn46mbeluhjarpc8j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6q2rkuzPGAZckQ2tx-a2jtr_WalLyyCo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:788005629051:android:30fa06c5837dd14a",
+        "android_client_info": {
+          "package_name": "com.hazem.redditapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "788005629051-k3umrg1r3n5fdemdn46mbeluhjarpc8j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6q2rkuzPGAZckQ2tx-a2jtr_WalLyyCo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-113112213-1"
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

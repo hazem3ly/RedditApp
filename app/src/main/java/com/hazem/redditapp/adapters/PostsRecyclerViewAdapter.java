@@ -116,20 +116,20 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostsRecycler
                 @Override
                 public void onClick(View v) {
                     if (child.data.likes == null)
-                        RedditApi.votePost(RedditApi.VOTE_UP, child.data.name,PostsRecyclerViewAdapter.this);
+                        RedditApi.voteThing(RedditApi.VOTE_UP, child.data.name,PostsRecyclerViewAdapter.this);
                     else if (!(Boolean) child.data.likes) {
-                        RedditApi.votePost(RedditApi.VOTE_UP, child.data.name,PostsRecyclerViewAdapter.this);
-                    } else RedditApi.votePost(RedditApi.UN_VOTE, child.data.name,PostsRecyclerViewAdapter.this);
+                        RedditApi.voteThing(RedditApi.VOTE_UP, child.data.name,PostsRecyclerViewAdapter.this);
+                    } else RedditApi.voteThing(RedditApi.UN_VOTE, child.data.name,PostsRecyclerViewAdapter.this);
                 }
             });
             down_vote.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (child.data.likes == null)
-                        RedditApi.votePost(RedditApi.VOTE_DOWN, child.data.name,PostsRecyclerViewAdapter.this);
+                        RedditApi.voteThing(RedditApi.VOTE_DOWN, child.data.name,PostsRecyclerViewAdapter.this);
                     else if ((Boolean)child.data.likes) {
-                        RedditApi.votePost(RedditApi.VOTE_DOWN, child.data.name,PostsRecyclerViewAdapter.this);
-                    } else RedditApi.votePost(RedditApi.VOTE_DOWN, child.data.name,PostsRecyclerViewAdapter.this);
+                        RedditApi.voteThing(RedditApi.VOTE_DOWN, child.data.name,PostsRecyclerViewAdapter.this);
+                    } else RedditApi.voteThing(RedditApi.VOTE_DOWN, child.data.name,PostsRecyclerViewAdapter.this);
                 }
             });
 

@@ -27,4 +27,12 @@
     <string name="user_not_logged">User Not Login</string>
     <string name="comment_success">Comment Add Successfully</string>
     <string name="error_comment">Error While Adding Comment</string>
+    <string name="user_saved">User Saved</string>
+
+    <string name="banner_ad_unit_id" >ca-app-pub-3940256099942544/6300978111</string>
+    <string name="Posts">posts</string>
+    <string name="saved_things">Saved</string>
+    <string name="logout">Logout</string>
+
+
 </resources>
