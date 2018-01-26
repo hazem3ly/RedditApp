@@ -29,10 +29,13 @@
     <string name="error_comment">Error While Adding Comment</string>
     <string name="user_saved">User Saved</string>
 
-    <string name="banner_ad_unit_id" >ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="Posts">posts</string>
     <string name="saved_things">Saved</string>
     <string name="logout">Logout</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="reddit_saved_things">Reddit Saved Things</string>
 
 
 </resources>

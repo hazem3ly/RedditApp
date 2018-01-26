@@ -161,7 +161,12 @@ public class MainActivity extends AppCompatActivity {
                 handleMenuSearch();
                 break;
             case R.id.profile:
-                Navigator.navigateToActivity(this, UserActivity.class);
+                if (App.getInstance().getCurrentSession().isLoggedIn()) {
+                    Navigator.navigateToActivity(this, UserActivity.class);
+                } else {
+                    Toast.makeText(this, getString(R.string.user_not_logged), Toast.LENGTH_SHORT).show();
+                    Navigator.navigateToActivity(this, LoginActivity.class);
+                }
                 break;
         }
         return true;

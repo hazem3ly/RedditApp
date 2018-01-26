@@ -7,8 +7,12 @@ package com.hazem.redditapp.utils;
 
 public class Constants {
 
-    private static final String SCOPE = "identity edit flair modposts mysubreddits " +
-            "read report save submit subscribe vote";
+    private static final String SCOPE1 = "identity edit flair modposts mysubreddits " +
+            "read report save submit subscribe vote history";
+    private static final String SCOPE = "identity edit flair history modconfig " +
+            "modflair modlog modposts modwiki mysubreddits privatemessages " +
+            "report save submit subscribe vote wikiedit wikiread read";
+
     public static final String CLIENT_ID = "-uirF03FNWtvDw";
     public static final String REDIRECT_URI = "http://127.0.0.1/my_redirect";
     public static final String STATE = "MY_RANDOM_STRING_1";

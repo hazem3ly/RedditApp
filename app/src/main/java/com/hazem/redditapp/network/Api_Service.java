@@ -6,6 +6,10 @@ import com.hazem.redditapp.model.RefreshToken;
 import com.hazem.redditapp.model.comment.CommentResult;
 import com.hazem.redditapp.model.post.PostListing;
 import com.hazem.redditapp.model.subreddit.SubredditListing;
+import com.hazem.redditapp.model.userComments.UserComments;
+import com.hazem.redditapp.model.userPosts.UserPosts;
+import com.hazem.redditapp.model.userSaved.UserSaved;
+import com.hazem.redditapp.model.userVotes.UserUpVoting;
 import com.hazem.redditapp.utils.Constants;
 
 import java.util.List;
@@ -85,17 +89,29 @@ public interface Api_Service {
                                     @Field("thing_id") String thingId,
                                     @Field("text") String commentBody);
 
-//
-////////////////////////////////////////////////////////////////////////////////////////////////
-//    @GET(Constants.BASE_URL + "/r/{subbreddit_name}/search/.json")
-//    Call<SubredditListing> searchPosts(@Header("Authorization") String authorization,
-//                                       @Path(value = "subbreddit_name", encoded = true) String subreddit_name,
-//                                       @QueryMap Map<String, String> options);
+    @GET(Constants.BASE_URL_OAUTH + "/user/{user_name}/comments/.json")
+    Call<UserComments> loadUserComments(@Header("Authorization") String authorization,
+                                        @Path(value = "user_name") String userName);
 
-//    @GET(Constants.BASE_URL_OAUTH + "/subreddits/mine/{where}")
-//    Call<SubredditParent> getMineSubreddits(@Header("Authorization") String authorization,
-//                                                  @Path(value = "where", encoded = true) String where,
-//                                                  @QueryMap Map<String, String> options);
+    @GET(Constants.BASE_URL_OAUTH + "/user/{user_name}/submitted/.json")
+    Call<UserPosts> loadUserPosts(@Header("Authorization") String authorization,
+                                  @Path(value = "user_name") String userName);
+
+    @GET(Constants.BASE_URL_OAUTH + "/user/{user_name}/saved/.json")
+    Call<UserSaved> loadUserSaved(@Header("Authorization") String authorization,
+                                  @Path(value = "user_name") String userName);
+
+    @GET(Constants.BASE_URL_OAUTH + "/user/{user_name}/upvoted/.json")
+    Call<UserUpVoting> loadUserUpvoted(@Header("Authorization") String authorization,
+                                       @Path(value = "user_name") String userName);
 
 
+
+/*
+
+
+    @GET(Constants.BASE_URL + "/r/{search}/search/.json")
+    Call<> searchPosts(@Header("Authorization") String authorization,
+                     @Path(value = "search") String search);
+ */
 }

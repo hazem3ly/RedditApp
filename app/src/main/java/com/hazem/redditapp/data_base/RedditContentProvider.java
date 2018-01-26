@@ -10,30 +10,45 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
-import static com.hazem.redditapp.data_base.RedditContract.REDDIT_ENTRY.TABLE_NAME;
-
 
 public class RedditContentProvider extends ContentProvider {
 
 
-    private static final int TASKS = 100;
-    private static final int TASK_WITH_ID = 101;
+    private static final int USER_TASK = 100;
+    private static final int USER_TASK_WITH_ID = 101;
+
+    private static final int USER_COMMENT_TASK = 102;
+    private static final int USER_COMMENT_TASK_WITH_ID = 103;
+
+    private static final int USER_SAVED_TASK = 104;
+    private static final int USER_SAVED_TASK_WITH_ID = 105;
+
+    private static final int USER_POST_TASK = 106;
+    private static final int USER_POST_TASK_WITH_ID = 107;
+
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
-
+    // Member variable for a TaskDbHelper that's initialized in the onCreate() method
+    private RedditDbHelper redditDbHelper;
 
     public static UriMatcher buildUriMatcher() {
 
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
-        uriMatcher.addURI(RedditContract.AUTHORITY, RedditContract.PATH_FREDDIT_DATA, TASKS);
-        uriMatcher.addURI(RedditContract.AUTHORITY, RedditContract.PATH_FREDDIT_DATA + "/#", TASK_WITH_ID);
+        uriMatcher.addURI(RedditContract.AUTHORITY, RedditContract.REDDIT_USER_TABLE.PATH_FREDDIT_DATA, USER_TASK);
+        uriMatcher.addURI(RedditContract.AUTHORITY, RedditContract.REDDIT_USER_TABLE.PATH_FREDDIT_DATA + "/*", USER_TASK_WITH_ID);
+
+        uriMatcher.addURI(RedditContract.AUTHORITY, RedditContract.USER_COMMENTS_TABLE.PATH_COMMENTS_DATA, USER_COMMENT_TASK);
+        uriMatcher.addURI(RedditContract.AUTHORITY, RedditContract.USER_COMMENTS_TABLE.PATH_COMMENTS_DATA + "/*", USER_COMMENT_TASK_WITH_ID);
+
+        uriMatcher.addURI(RedditContract.AUTHORITY, RedditContract.USER_SAVED_TABLE.PATH_SAVED_DATA, USER_SAVED_TASK);
+        uriMatcher.addURI(RedditContract.AUTHORITY, RedditContract.USER_SAVED_TABLE.PATH_SAVED_DATA + "/*", USER_SAVED_TASK_WITH_ID);
+
+        uriMatcher.addURI(RedditContract.AUTHORITY, RedditContract.USER_POSTS_TABLE.PATH_POSTS_DATA, USER_POST_TASK);
+        uriMatcher.addURI(RedditContract.AUTHORITY, RedditContract.USER_POSTS_TABLE.PATH_POSTS_DATA + "/*", USER_POST_TASK_WITH_ID);
 
         return uriMatcher;
     }
-
-    // Member variable for a TaskDbHelper that's initialized in the onCreate() method
-    private RedditDbHelper redditDbHelper;
 
     /* onCreate() is where you should initialize anything you’ll need to setup
     your underlying data source.
@@ -61,16 +76,49 @@ public class RedditContentProvider extends ContentProvider {
         int match = sUriMatcher.match(uri);
         Uri returnUri; // URI to be returned
 
+        long id;
         switch (match) {
-            case TASKS:
+            case USER_TASK:
                 // Insert new values into the database
-                long id = db.insert(TABLE_NAME, null, values);
-                if ( id > 0 ) {
-                    returnUri = ContentUris.withAppendedId(RedditContract.REDDIT_ENTRY.CONTENT_URI, id);
+                id = db.insert(RedditContract.REDDIT_USER_TABLE.TABLE_NAME, null, values);
+                if (id > 0) {
+                    returnUri = ContentUris.withAppendedId(RedditContract.REDDIT_USER_TABLE.CONTENT_URI, id);
                 } else {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 }
                 break;
+
+            case USER_COMMENT_TASK:
+                // Insert new values into the database
+                id = db.insert(RedditContract.USER_COMMENTS_TABLE.TABLE_NAME, null, values);
+                if (id > 0) {
+                    returnUri = ContentUris.withAppendedId(RedditContract.USER_COMMENTS_TABLE.CONTENT_URI, id);
+                } else {
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                }
+                break;
+
+            case USER_POST_TASK:
+                // Insert new values into the database
+                id = db.insert(RedditContract.USER_POSTS_TABLE.TABLE_NAME, null, values);
+                if (id > 0) {
+                    returnUri = ContentUris.withAppendedId(RedditContract.USER_POSTS_TABLE.CONTENT_URI, id);
+                } else {
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                }
+                break;
+
+            case USER_SAVED_TASK:
+                // Insert new values into the database
+                id = db.insert(RedditContract.USER_SAVED_TABLE.TABLE_NAME, null, values);
+                if (id > 0) {
+                    returnUri = ContentUris.withAppendedId(RedditContract.USER_SAVED_TABLE.CONTENT_URI, id);
+                } else {
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                }
+                break;
+
+
             // Set the value for the returnedUri and write the default case for unknown URI's
             // Default case throws an UnsupportedOperationException
             default:
@@ -100,8 +148,35 @@ public class RedditContentProvider extends ContentProvider {
         // Query for the tasks directory and write a default case
         switch (match) {
             // Query for the tasks directory
-            case TASKS:
-                retCursor =  db.query(TABLE_NAME,
+            case USER_TASK:
+                retCursor = db.query(RedditContract.REDDIT_USER_TABLE.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder);
+                break;
+            case USER_COMMENT_TASK:
+                retCursor = db.query(RedditContract.USER_COMMENTS_TABLE.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder);
+                break;
+            case USER_POST_TASK:
+                retCursor = db.query(RedditContract.USER_POSTS_TABLE.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder);
+                break;
+            case USER_SAVED_TASK:
+                retCursor = db.query(RedditContract.USER_SAVED_TABLE.TABLE_NAME,
                         projection,
                         selection,
                         selectionArgs,
@@ -137,11 +212,20 @@ public class RedditContentProvider extends ContentProvider {
         // [Hint] Use selections to delete an item by its row ID
         switch (match) {
             // Handle the single item case, recognized by the ID included in the URI path
-            case TASK_WITH_ID:
+            case USER_TASK_WITH_ID:
                 // Get the task ID from the URI path
                 String id = uri.getPathSegments().get(1);
                 // Use selections/selectionArgs to filter for this ID
-                tasksDeleted = db.delete(TABLE_NAME, "ids=?", new String[]{id});
+                tasksDeleted = db.delete(RedditContract.REDDIT_USER_TABLE.TABLE_NAME, "id=?", new String[]{id});
+                break;
+            case USER_SAVED_TASK:
+                tasksDeleted = db.delete(RedditContract.USER_SAVED_TABLE.TABLE_NAME, null, null);
+                break;
+            case USER_COMMENT_TASK:
+                tasksDeleted = db.delete(RedditContract.USER_COMMENTS_TABLE.TABLE_NAME, null, null);
+                break;
+            case USER_POST_TASK:
+                tasksDeleted = db.delete(RedditContract.USER_POSTS_TABLE.TABLE_NAME, null, null);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
