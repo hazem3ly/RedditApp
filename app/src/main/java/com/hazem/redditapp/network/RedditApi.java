@@ -1,8 +1,9 @@
-package com.hazem.redditapp;
+package com.hazem.redditapp.network;
 
 import android.support.annotation.NonNull;
 import android.util.Base64;
 
+import com.hazem.redditapp.utils.App;
 import com.hazem.redditapp.activities.MainActivity;
 import com.hazem.redditapp.model.RefreshToken;
 import com.hazem.redditapp.model.comment.CommentResult;
@@ -13,8 +14,6 @@ import com.hazem.redditapp.model.userPosts.UserPosts;
 import com.hazem.redditapp.model.userSaved.UserSaved;
 import com.hazem.redditapp.model.userVotes.UserUpVoting;
 import com.hazem.redditapp.model.user_details_mode.UserRequest;
-import com.hazem.redditapp.network.RestClient;
-import com.hazem.redditapp.network.UserDetailsTask;
 import com.hazem.redditapp.utils.Constants;
 import com.hazem.redditapp.utils.SessionManager;
 

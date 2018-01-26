@@ -26,9 +26,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.hazem.redditapp.App;
 import com.hazem.redditapp.R;
-import com.hazem.redditapp.RedditApi;
 import com.hazem.redditapp.adapters.CommentsRecyclerAdapter;
 import com.hazem.redditapp.adapters.PostsRecyclerAdapter;
 import com.hazem.redditapp.adapters.SavedRecyclerAdapter;
@@ -38,6 +36,8 @@ import com.hazem.redditapp.model.userPosts.UserPosts;
 import com.hazem.redditapp.model.userSaved.Child;
 import com.hazem.redditapp.model.userSaved.UserSaved;
 import com.hazem.redditapp.model.user_details_mode.UserRequest;
+import com.hazem.redditapp.network.RedditApi;
+import com.hazem.redditapp.utils.App;
 import com.squareup.picasso.Picasso;
 
 public class UserActivity extends AppCompatActivity implements RedditApi.OnLoadDataReady, LoaderManager.LoaderCallbacks<Cursor> {
@@ -50,6 +50,9 @@ public class UserActivity extends AppCompatActivity implements RedditApi.OnLoadD
     private static final int POSTS_TAB = 0;
     private static final int COMMENTS_TAB = 1;
     private static final int SAVED_TAB = 2;
+    private static final String RECYCLER_POSITION = "recycler_position";
+    private static final String TAB_POSITION = "tab_posotion";
+    private static final String USER_NAME = "user_name";
     RecyclerView recycler_view;
     TabLayout user_tabs;
     TextView user_name;
@@ -59,6 +62,7 @@ public class UserActivity extends AppCompatActivity implements RedditApi.OnLoadD
     ProgressBar progressBar;
     private String userName;
     private String userId;
+    private LinearLayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,11 +92,39 @@ public class UserActivity extends AppCompatActivity implements RedditApi.OnLoadD
 
             }
         });
-        RedditApi.loadUserData(this);
 
 
-        showProgress(true);
-        loadDataFromApi(currentTab);
+        if (savedInstanceState != null) {
+
+            if (savedInstanceState.containsKey(TAB_POSITION)) {
+                currentTab = savedInstanceState.getInt(TAB_POSITION, 0);
+                loadDataFromDb(currentTab);
+                user_tabs.getTabAt(currentTab).select();
+            }
+
+            if (savedInstanceState.containsKey(USER_NAME)){
+                userName = savedInstanceState.getString(USER_NAME);
+                user_name.setText(userName);
+            }
+
+
+            if (savedInstanceState.containsKey(RECYCLER_POSITION))
+                layoutManager.onRestoreInstanceState(savedInstanceState.getParcelable(RECYCLER_POSITION));
+        } else {
+            RedditApi.loadUserData(this);
+            showProgress(true);
+            loadDataFromApi(currentTab);
+        }
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(TAB_POSITION, currentTab);
+        outState.putString(USER_NAME, userName);
+        if (layoutManager != null)
+            outState.putParcelable(RECYCLER_POSITION, layoutManager.onSaveInstanceState());
+        super.onSaveInstanceState(outState);
     }
 
     private void showProgress(boolean isProgress) {
@@ -115,7 +147,7 @@ public class UserActivity extends AppCompatActivity implements RedditApi.OnLoadD
     }
 
     private void getSavedData() {
-        if (userName == null){
+        if (userName == null) {
             loadDataFromDb(currentTab);
             return;
         }
@@ -132,7 +164,7 @@ public class UserActivity extends AppCompatActivity implements RedditApi.OnLoadD
     }
 
     private void getPostsData() {
-        if (userName == null){
+        if (userName == null) {
             loadDataFromDb(currentTab);
             return;
         }
@@ -149,7 +181,7 @@ public class UserActivity extends AppCompatActivity implements RedditApi.OnLoadD
     }
 
     private void getCommentsData() {
-        if (userName == null){
+        if (userName == null) {
             loadDataFromDb(currentTab);
             return;
         }
@@ -300,7 +332,7 @@ public class UserActivity extends AppCompatActivity implements RedditApi.OnLoadD
     private void initialViews() {
         progressBar = findViewById(R.id.progress_bar);
         recycler_view = findViewById(R.id.recycler_view);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recycler_view.setLayoutManager(layoutManager);
         user_tabs = findViewById(R.id.user_tabs);
         user_name = findViewById(R.id.user_name);

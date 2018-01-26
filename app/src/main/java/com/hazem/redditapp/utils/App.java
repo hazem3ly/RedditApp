@@ -1,10 +1,10 @@
-package com.hazem.redditapp;
+package com.hazem.redditapp.utils;
 
 import android.app.Application;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
-import com.hazem.redditapp.utils.SessionManager;
+import com.hazem.redditapp.R;
 
 /**
  * Created by Hazem Ali.

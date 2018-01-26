@@ -15,7 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hazem.redditapp.R;
-import com.hazem.redditapp.RedditApi;
+import com.hazem.redditapp.network.RedditApi;
 import com.hazem.redditapp.activities.PostDetailsActivity;
 import com.hazem.redditapp.model.subreddit.Child;
 import com.hazem.redditapp.model.subreddit.SubredditListing;

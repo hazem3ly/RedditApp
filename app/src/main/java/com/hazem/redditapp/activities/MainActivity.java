@@ -26,7 +26,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.hazem.redditapp.App;
+import com.hazem.redditapp.utils.App;
 import com.hazem.redditapp.R;
 import com.hazem.redditapp.adapters.ViewPagerAdapter;
 import com.hazem.redditapp.fragments.ContrSubFragment;

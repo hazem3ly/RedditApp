@@ -9,7 +9,7 @@ import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.hazem.redditapp.App;
+import com.hazem.redditapp.utils.App;
 import com.hazem.redditapp.R;
 import com.hazem.redditapp.model.AccessToken;
 import com.hazem.redditapp.network.RestClient;

@@ -1,115 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
+    android:fillViewport="true"
     tools:context="com.hazem.redditapp.activities.UserActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme" />
-
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/adView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        ads:adSize="BANNER"
-        ads:adUnitId="@string/banner_ad_unit_id"
-        tools:ignore="InconsistentLayout" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/adView"
-        android:layout_below="@id/toolbar"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
 
-        <LinearLayout
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:background="@color/colorPrimaryDark"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme" />
 
-            <ImageView
-                android:id="@+id/user_icon"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:src="@drawable/logo" />
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            ads:adSize="BANNER"
+            ads:adUnitId="@string/banner_ad_unit_id"
+            tools:ignore="InconsistentLayout" />
 
-            <TextView
-                android:id="@+id/user_name"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="5dp"
-                android:gravity="center"
-                android:textColor="@color/primaryText"
-                android:textSize="20sp"
-                tools:text="Hazem ali" />
-
-        </LinearLayout>
-
-        <android.support.design.widget.TabLayout
-            android:id="@+id/user_tabs"
+        <ScrollView
+            android:fillViewport="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            ads:tabIndicatorColor="@color/colorAccent"
-            ads:tabMode="fixed"
-            ads:tabTextColor="@color/primaryText">
+            android:layout_above="@id/adView"
+            android:layout_below="@id/toolbar">
 
-            <android.support.design.widget.TabItem
-                android:id="@+id/posts_user_tab"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/Posts" />
-
-            <android.support.design.widget.TabItem
-                android:id="@+id/comments_user_tab"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/comments_label" />
-
-            <android.support.design.widget.TabItem
-                android:id="@+id/saved_user_tab"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/saved_things" />
-
-        </android.support.design.widget.TabLayout>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-            </android.support.v7.widget.RecyclerView>
-
-            <ProgressBar
-                android:id="@+id/progress_bar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:visibility="gone" />
+                android:layout_height="0dp"
+                android:orientation="vertical">
 
 
-        </FrameLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-    </LinearLayout>
+                    <ImageView
+                        android:id="@+id/user_icon"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="20dp"
+                        android:src="@drawable/logo" />
+
+                    <TextView
+                        android:id="@+id/user_name"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:textColor="@color/primaryText"
+                        android:textSize="20sp"
+                        tools:text="Hazem ali" />
+
+                </LinearLayout>
+
+                <android.support.design.widget.TabLayout
+                    android:id="@+id/user_tabs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    ads:tabIndicatorColor="@color/colorAccent"
+                    ads:tabMode="fixed"
+                    ads:tabTextColor="@color/primaryText">
+
+                    <android.support.design.widget.TabItem
+                        android:id="@+id/posts_user_tab"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/Posts" />
+
+                    <android.support.design.widget.TabItem
+                        android:id="@+id/comments_user_tab"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/comments_label" />
+
+                    <android.support.design.widget.TabItem
+                        android:id="@+id/saved_user_tab"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/saved_things" />
+
+                </android.support.design.widget.TabLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                    </android.support.v7.widget.RecyclerView>
+
+                    <ProgressBar
+                        android:id="@+id/progress_bar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:visibility="gone" />
 
 
-</RelativeLayout>
+                </FrameLayout>
+
+            </LinearLayout>
+        </ScrollView>
+
+
+    </RelativeLayout>
+</ScrollView>

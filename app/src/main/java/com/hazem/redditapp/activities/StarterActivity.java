@@ -7,7 +7,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import com.hazem.redditapp.App;
+import com.hazem.redditapp.utils.App;
 import com.hazem.redditapp.R;
 import com.hazem.redditapp.utils.Navigator;
 import com.hazem.redditapp.utils.SessionManager;

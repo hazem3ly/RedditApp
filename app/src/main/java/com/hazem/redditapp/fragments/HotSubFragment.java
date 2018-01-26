@@ -13,9 +13,9 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.hazem.redditapp.App;
+import com.hazem.redditapp.utils.App;
 import com.hazem.redditapp.R;
-import com.hazem.redditapp.RedditApi;
+import com.hazem.redditapp.network.RedditApi;
 import com.hazem.redditapp.activities.MainActivity;
 import com.hazem.redditapp.adapters.PostsRecyclerViewAdapter;
 import com.hazem.redditapp.model.DataChanged;
