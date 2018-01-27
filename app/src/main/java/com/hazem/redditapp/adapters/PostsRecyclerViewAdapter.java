@@ -15,12 +15,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hazem.redditapp.R;
-import com.hazem.redditapp.network.RedditApi;
 import com.hazem.redditapp.activities.PostDetailsActivity;
 import com.hazem.redditapp.model.subreddit.Child;
+import com.hazem.redditapp.model.subreddit.Image;
+import com.hazem.redditapp.model.subreddit.Preview;
+import com.hazem.redditapp.model.subreddit.Source;
 import com.hazem.redditapp.model.subreddit.SubredditListing;
+import com.hazem.redditapp.network.RedditApi;
 import com.hazem.redditapp.utils.Constants;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 /**
  * Created by Hazem Ali.
@@ -53,13 +58,15 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostsRecycler
     public int getItemCount() {
         return subredditListing.data.children.size();
     }
+
     @Override
     public void OnResult(boolean success) {
         if (context instanceof Activity) {
             Toast.makeText(context, success ? context.getString(R.string.voted)
-                    :context.getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                    : context.getString(R.string.failed), Toast.LENGTH_SHORT).show();
         }
     }
+
     class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView subreddit_name, post_owner_user_name, post_title, vote_count, comment_count;
@@ -91,15 +98,31 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostsRecycler
             post_title.setText(String.valueOf(child.data.title));
             String imageUrl;
 
-            try {
+            Preview preview = child.data.preview;
+            if (preview != null) {
+                List<Image> image = preview.images;
+                if (image != null && image.size() > 0) {
+                    Image image1 = image.get(0);
+                    if (image1 != null) {
+                        Source source = image1.source;
+                        if (source != null) {
+                            String url = source.url;
+                            if (url != null) imageUrl = url;
+                            else imageUrl = "";
+                        } else imageUrl = "";
+                    } else imageUrl = "";
+                } else imageUrl = "";
+            } else imageUrl = "";
+
+
+           /* try {
                 imageUrl = child.data.preview.images.get(0).source.url;
             } catch (Exception e) {
                 imageUrl = "";
-            }
+            }*/
             if (!imageUrl.isEmpty())
                 Picasso.with(context)
                         .load(imageUrl).fit()
-//                        .resize(300, 140)
                         .placeholder(R.drawable.images)
                         .error(R.drawable.logo)
                         .into(post_poster);
@@ -116,20 +139,22 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostsRecycler
                 @Override
                 public void onClick(View v) {
                     if (child.data.likes == null)
-                        RedditApi.voteThing(RedditApi.VOTE_UP, child.data.name,PostsRecyclerViewAdapter.this);
+                        RedditApi.voteThing(RedditApi.VOTE_UP, child.data.name, PostsRecyclerViewAdapter.this);
                     else if (!(Boolean) child.data.likes) {
-                        RedditApi.voteThing(RedditApi.VOTE_UP, child.data.name,PostsRecyclerViewAdapter.this);
-                    } else RedditApi.voteThing(RedditApi.UN_VOTE, child.data.name,PostsRecyclerViewAdapter.this);
+                        RedditApi.voteThing(RedditApi.VOTE_UP, child.data.name, PostsRecyclerViewAdapter.this);
+                    } else
+                        RedditApi.voteThing(RedditApi.UN_VOTE, child.data.name, PostsRecyclerViewAdapter.this);
                 }
             });
             down_vote.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (child.data.likes == null)
-                        RedditApi.voteThing(RedditApi.VOTE_DOWN, child.data.name,PostsRecyclerViewAdapter.this);
-                    else if ((Boolean)child.data.likes) {
-                        RedditApi.voteThing(RedditApi.VOTE_DOWN, child.data.name,PostsRecyclerViewAdapter.this);
-                    } else RedditApi.voteThing(RedditApi.VOTE_DOWN, child.data.name,PostsRecyclerViewAdapter.this);
+                        RedditApi.voteThing(RedditApi.VOTE_DOWN, child.data.name, PostsRecyclerViewAdapter.this);
+                    else if ((Boolean) child.data.likes) {
+                        RedditApi.voteThing(RedditApi.VOTE_DOWN, child.data.name, PostsRecyclerViewAdapter.this);
+                    } else
+                        RedditApi.voteThing(RedditApi.VOTE_DOWN, child.data.name, PostsRecyclerViewAdapter.this);
                 }
             });
 
@@ -157,7 +182,7 @@ public class PostsRecyclerViewAdapter extends RecyclerView.Adapter<PostsRecycler
                     sharingIntent.setType("text/plain");
                     sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, context.getString(R.string.app_name));
                     sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, child.data.title);
-                    context.startActivity(Intent.createChooser(sharingIntent, "Share via"));
+                    context.startActivity(Intent.createChooser(sharingIntent, context.getString(R.string.share_via)));
                 }
             });
         }

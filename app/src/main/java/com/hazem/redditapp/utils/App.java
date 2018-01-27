@@ -5,6 +5,7 @@ import android.app.Application;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.hazem.redditapp.R;
+import com.hazem.redditapp.model.subreddit.SubredditListing;
 
 /**
  * Created by Hazem Ali.
@@ -17,6 +18,7 @@ public class App extends Application {
     private SessionManager currentSession;
     private static GoogleAnalytics sAnalytics;
     private static Tracker sTracker;
+    private SubredditListing currentList;
 
     public static App getInstance() {
         return instance;
@@ -46,4 +48,11 @@ public class App extends Application {
         return sTracker;
     }
 
+    public void setCurrentList(SubredditListing currentList) {
+        this.currentList = currentList;
+    }
+
+    public SubredditListing getCurrentList() {
+        return currentList;
+    }
 }

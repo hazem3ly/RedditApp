@@ -29,6 +29,7 @@ import com.hazem.redditapp.utils.SessionManager;
 public class RisingSubFragment extends Fragment implements DataChanged {
 
 
+    private static final String RECYCLER_POSITION = "recycler_position";
     RecyclerView recycler_view;
     PostsRecyclerViewAdapter adapter;
     String filter = Constants.RISING_POSTS;
@@ -38,6 +39,8 @@ public class RisingSubFragment extends Fragment implements DataChanged {
     TextView error_load_text;
 
     SessionManager sessionManager;
+    private LinearLayoutManager layoutManager;
+    private boolean restoreSave;
 
 
     public RisingSubFragment() {
@@ -61,6 +64,22 @@ public class RisingSubFragment extends Fragment implements DataChanged {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        initialViews(view);
+        if (savedInstanceState != null) {
+            restoreSave = true;
+            if (App.getInstance().getCurrentList() != null) {
+                updateViews(App.getInstance().getCurrentList());
+            }
+            if (savedInstanceState.containsKey(RECYCLER_POSITION))
+                layoutManager.onRestoreInstanceState(savedInstanceState.getParcelable(RECYCLER_POSITION));
+        } else {
+            restoreSave = false;
+            getList();
+        }
+    }
+
+    private void initialViews(View view) {
+
         swipe_refresh = view.findViewById(R.id.swipe_refresh);
         swipe_refresh.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
@@ -79,10 +98,16 @@ public class RisingSubFragment extends Fragment implements DataChanged {
             }
         });
         recycler_view = view.findViewById(R.id.recycler_view);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),
+        layoutManager = new LinearLayoutManager(getContext(),
                 LinearLayoutManager.VERTICAL, false);
         recycler_view.setLayoutManager(layoutManager);
-        getList();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (layoutManager != null)
+            outState.putParcelable(RECYCLER_POSITION, layoutManager.onSaveInstanceState());
+        super.onSaveInstanceState(outState);
     }
 
     public void getList() {
@@ -125,6 +150,7 @@ public class RisingSubFragment extends Fragment implements DataChanged {
     }
 
     private void updateViews(SubredditListing subredditListing) {
+        App.getInstance().setCurrentList(subredditListing);
         adapter = new PostsRecyclerViewAdapter(getContext(),subredditListing);
         if (recycler_view != null) {
             showProgress(false, true);
@@ -135,7 +161,7 @@ public class RisingSubFragment extends Fragment implements DataChanged {
 
     @Override
     public void OnDataChanged() {
-        if (isVisible()) {
+        if (isVisible() && !restoreSave) {
             getList();
         }
     }

@@ -1,5 +1,8 @@
 package com.hazem.redditapp.activities;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -24,13 +27,21 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.hazem.redditapp.utils.App;
 import com.hazem.redditapp.R;
-import com.hazem.redditapp.network.RedditApi;
 import com.hazem.redditapp.adapters.CommentsRecyclerViewAdapter;
+import com.hazem.redditapp.data_base.RedditContract;
+import com.hazem.redditapp.model.post.Image;
 import com.hazem.redditapp.model.post.PostListing;
+import com.hazem.redditapp.model.post.Preview;
+import com.hazem.redditapp.model.post.Source;
+import com.hazem.redditapp.model.userSaved.Child;
+import com.hazem.redditapp.model.userSaved.UserSaved;
+import com.hazem.redditapp.model.user_details_mode.UserRequest;
+import com.hazem.redditapp.network.RedditApi;
+import com.hazem.redditapp.utils.App;
 import com.hazem.redditapp.utils.Constants;
 import com.hazem.redditapp.utils.SessionManager;
+import com.hazem.redditapp.widget.NewAppWidget;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -51,6 +62,7 @@ public class PostDetailsActivity extends AppCompatActivity implements RedditApi.
     ScrollView scrollView;
     LinearLayout comment_btn;
     private PostListing postData;
+    private LinearLayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,12 +112,59 @@ public class PostDetailsActivity extends AppCompatActivity implements RedditApi.
             RedditApi.saveUnSaveThing(postData.data.children.get(0).data.name, true, new RedditApi.CallbackListener() {
                 @Override
                 public void OnResult(boolean success) {
+                    updateDatabase();
                     Toast.makeText(PostDetailsActivity.this, success ? getString(R.string.saved)
                             : getString(R.string.failed), Toast.LENGTH_SHORT).show();
 
                 }
             });
         }
+    }
+
+    private void updateDatabase() {
+        RedditApi.loadUserData(new RedditApi.OnLoadDataReady() {
+            @Override
+            public void OnUserDataReady(UserRequest userData) {
+                if (userData != null) {
+                    loadData(userData.name);
+                }
+            }
+        });
+
+
+    }
+
+    private void loadData(String name) {
+        RedditApi.loadUserSaved(name, new RedditApi.OnUserSavedReady() {
+            @Override
+            public void OnSavedReady(UserSaved userSaved) {
+                if (userSaved != null) {
+                    saveUserSavedPostInDb(userSaved);
+                }
+            }
+        });
+    }
+
+    private void saveUserSavedPostInDb(UserSaved userSaved) {
+
+        getContentResolver().delete(RedditContract.USER_SAVED_TABLE.CONTENT_URI, null, null);
+
+
+        for (Child child : userSaved.data.children) {
+            ContentValues cv = new ContentValues();
+            cv.put(RedditContract.USER_SAVED_TABLE.POST_TITLE, child.kind.equals("t3") ? child.data.title : child.data.linkTitle);
+            cv.put(RedditContract.USER_SAVED_TABLE.SUBREDDIT_NAME, child.data.subreddit);
+            cv.put(RedditContract.USER_SAVED_TABLE.USER_COMMENT, child.data.body);
+            cv.put(RedditContract.USER_SAVED_TABLE.IS_POST, child.kind.equals("t3") ? "1" : "0");
+            cv.put(RedditContract.USER_SAVED_TABLE.LINK_PERMALINK, child.data.linkPermalink);
+
+            getContentResolver().insert(RedditContract.USER_SAVED_TABLE.CONTENT_URI, cv);
+        }
+
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+        int[] ids = appWidgetManager.getAppWidgetIds(
+                new ComponentName(this, NewAppWidget.class));
+        NewAppWidget.updateAllWidgets(this, appWidgetManager, ids);
     }
 
     private void initialToolbar() {
@@ -182,15 +241,33 @@ public class PostDetailsActivity extends AppCompatActivity implements RedditApi.
         }
         String imageUrl;
 
-        try {
+        com.hazem.redditapp.model.post.Child child = postData.data.children.get(0);
+        if (child != null) {
+            Preview preview = child.data.preview;
+            if (preview != null) {
+                List<Image> image = preview.images;
+                if (image != null && image.size() > 0) {
+                    Image image1 = image.get(0);
+                    if (image1 != null) {
+                        Source source = image1.source;
+                        if (source != null) {
+                            String url = source.url;
+                            if (url != null) imageUrl = url;
+                            else imageUrl = "";
+                        } else imageUrl = "";
+                    } else imageUrl = "";
+                } else imageUrl = "";
+            } else imageUrl = "";
+        } else imageUrl = "";
+
+        /*try {
             imageUrl = postData.data.children.get(0).data.preview.images.get(0).source.url;
-        } catch (Exception e) {
+        } catch (IndexOutOfBoundsException e) {
             imageUrl = "";
-        }
+        }*/
         if (!imageUrl.isEmpty())
             Picasso.with(this)
                     .load(imageUrl)
-//                    .resize(350, 150)
                     .fit()
                     .placeholder(R.drawable.images)
                     .error(R.drawable.logo)
@@ -235,7 +312,7 @@ public class PostDetailsActivity extends AppCompatActivity implements RedditApi.
                 sharingIntent.setType("text/plain");
                 sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.app_name));
                 sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, postData.data.children.get(0).data.title);
-                startActivity(Intent.createChooser(sharingIntent, "Share via"));
+                startActivity(Intent.createChooser(sharingIntent, getString(R.string.share_via)));
             }
         });
 
@@ -300,7 +377,7 @@ public class PostDetailsActivity extends AppCompatActivity implements RedditApi.
         });
 
         comments_list = findViewById(R.id.comments_list);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this,
+        layoutManager = new LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL, false);
         comments_list.setLayoutManager(layoutManager);
 

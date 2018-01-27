@@ -27,6 +27,13 @@ public class NewAppWidget extends AppWidgetProvider {
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
+    public static void updateAllWidgets(Context context, AppWidgetManager appWidgetManager, int[] ids) {
+        for (int appWidgetId : ids) {
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.saved_list_items);
+            updateAppWidget(context, appWidgetManager, appWidgetId);
+        }
+    }
+
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them

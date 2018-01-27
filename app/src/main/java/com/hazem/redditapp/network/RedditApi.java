@@ -189,14 +189,14 @@ public class RedditApi {
         Call<ResponseBody> call = client.getApi_service().postVote(auth, String.valueOf(voteDir), id);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     if (listener != null) listener.OnResult(true);
                 } else if (listener != null) listener.OnResult(false);
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                 if (listener != null) listener.OnResult(false);
             }
         });
@@ -257,14 +257,14 @@ public class RedditApi {
             Call<ResponseBody> call = client.getApi_service().postSave(auth, String.valueOf(thingId));
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                     if (response.isSuccessful()) {
                         if (listener != null) listener.OnResult(true);
                     } else if (listener != null) listener.OnResult(false);
                 }
 
                 @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                     if (listener != null) listener.OnResult(false);
                 }
             });
@@ -272,14 +272,14 @@ public class RedditApi {
             Call<ResponseBody> call = client.getApi_service().postUnsave(auth, String.valueOf(thingId));
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                     if (response.isSuccessful()) {
 
                     }
                 }
 
                 @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
 
                 }
             });
@@ -338,7 +338,7 @@ public class RedditApi {
         Call<CommentResult> call = client.getApi_service().postComment(auth, thingId, commentBody);
         call.enqueue(new Callback<CommentResult>() {
             @Override
-            public void onResponse(Call<CommentResult> call, Response<CommentResult> response) {
+            public void onResponse(@NonNull Call<CommentResult> call, @NonNull Response<CommentResult> response) {
                 if (response.isSuccessful()) {
                     CommentResult commentResult = response.body();
                     if (commentResult != null) {
@@ -349,7 +349,7 @@ public class RedditApi {
             }
 
             @Override
-            public void onFailure(Call<CommentResult> call, Throwable t) {
+            public void onFailure(@NonNull Call<CommentResult> call, @NonNull Throwable t) {
                 if (listener != null) listener.OnResult(false);
             }
         });
@@ -470,7 +470,7 @@ public class RedditApi {
         Call<UserComments> call = client.getApi_service().loadUserComments(auth, userName);
         call.enqueue(new Callback<UserComments>() {
             @Override
-            public void onResponse(Call<UserComments> call, Response<UserComments> response) {
+            public void onResponse(@NonNull Call<UserComments> call, @NonNull Response<UserComments> response) {
                 if (response.isSuccessful()) {
                     UserComments userComments = response.body();
                     if (userComments != null) {
@@ -480,7 +480,7 @@ public class RedditApi {
             }
 
             @Override
-            public void onFailure(Call<UserComments> call, Throwable t) {
+            public void onFailure(@NonNull Call<UserComments> call, @NonNull Throwable t) {
                 if (listener != null) listener.OnCommentsReady(null);
             }
         });
@@ -538,7 +538,7 @@ public class RedditApi {
         Call<UserPosts> call = client.getApi_service().loadUserPosts(auth, userName);
         call.enqueue(new Callback<UserPosts>() {
             @Override
-            public void onResponse(Call<UserPosts> call, Response<UserPosts> response) {
+            public void onResponse(@NonNull Call<UserPosts> call, @NonNull Response<UserPosts> response) {
                 if (response.isSuccessful()) {
                     UserPosts userPosts = response.body();
                     if (userPosts != null) {
@@ -548,7 +548,7 @@ public class RedditApi {
             }
 
             @Override
-            public void onFailure(Call<UserPosts> call, Throwable t) {
+            public void onFailure(@NonNull Call<UserPosts> call, @NonNull Throwable t) {
                 if (listener != null) listener.OnPostsReady(null);
             }
         });
@@ -605,7 +605,7 @@ public class RedditApi {
         Call<UserSaved> call = client.getApi_service().loadUserSaved(auth, userName);
         call.enqueue(new Callback<UserSaved>() {
             @Override
-            public void onResponse(Call<UserSaved> call, Response<UserSaved> response) {
+            public void onResponse(@NonNull Call<UserSaved> call, @NonNull Response<UserSaved> response) {
                 if (response.isSuccessful()) {
                     UserSaved userSaved = response.body();
                     if (userSaved != null) {
@@ -615,7 +615,7 @@ public class RedditApi {
             }
 
             @Override
-            public void onFailure(Call<UserSaved> call, Throwable t) {
+            public void onFailure(@NonNull Call<UserSaved> call, @NonNull Throwable t) {
                 if (listener != null) listener.OnSavedReady(null);
             }
         });
@@ -673,7 +673,7 @@ public class RedditApi {
         Call<UserUpVoting> call = client.getApi_service().loadUserUpvoted(auth, userName);
         call.enqueue(new Callback<UserUpVoting>() {
             @Override
-            public void onResponse(Call<UserUpVoting> call, Response<UserUpVoting> response) {
+            public void onResponse(@NonNull Call<UserUpVoting> call, @NonNull Response<UserUpVoting> response) {
                 if (response.isSuccessful()) {
                     UserUpVoting userUpVoting = response.body();
                     if (userUpVoting != null) {
@@ -683,7 +683,7 @@ public class RedditApi {
             }
 
             @Override
-            public void onFailure(Call<UserUpVoting> call, Throwable t) {
+            public void onFailure(@NonNull Call<UserUpVoting> call, @NonNull Throwable t) {
                 if (listener != null) listener.OnUpVotingReady(null);
             }
         });

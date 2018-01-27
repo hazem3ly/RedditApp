@@ -62,6 +62,7 @@ public class CommentsRecyclerViewAdapter extends RecyclerView.Adapter<CommentsRe
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
+        public static final String K = "K";
         TextView comment_owner, comment_body, vote_count;
         LinearLayout reply_btn;
         ImageButton up_vote, down_vote;
@@ -82,7 +83,7 @@ public class CommentsRecyclerViewAdapter extends RecyclerView.Adapter<CommentsRe
 
         void BindData(final Child child) {
 
-            if (!child.kind.equals("t1")) return;
+            if (!child.kind.equals(context.getString(R.string.comment_type))) return;
 
             comment_owner.setText(String.valueOf(child.data.author));
             comment_body.setText(String.valueOf(child.data.body));
@@ -90,7 +91,7 @@ public class CommentsRecyclerViewAdapter extends RecyclerView.Adapter<CommentsRe
             String c = String.valueOf(child.data.score);
             int count = child.data.score;
             if (count > 1000) {
-                c = String.valueOf(count / 1000) + "K";
+                c = String.valueOf(count / 1000) + K;
             }
             vote_count.setText(c);
             up_vote.setOnClickListener(new View.OnClickListener() {

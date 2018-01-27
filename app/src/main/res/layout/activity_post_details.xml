@@ -82,6 +82,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:background="@android:color/transparent"
+                                android:contentDescription="@string/app_name"
                                 android:padding="10dp"
                                 android:src="@drawable/ic_arrow_upward_wight_24dp" />
 
@@ -100,6 +101,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:background="@android:color/transparent"
+                                android:contentDescription="@string/app_name"
                                 android:padding="10dp"
                                 android:src="@drawable/ic_arrow_downward_wight_24dp" />
 
@@ -117,6 +119,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:background="@android:color/transparent"
+                                android:contentDescription="@string/app_name"
                                 android:src="@drawable/ic_comment_wight_24dp" />
 
 
@@ -145,6 +148,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:background="@android:color/transparent"
+                                android:contentDescription="@string/app_name"
                                 android:src="@drawable/ic_share_wight_24dp" />
 
 
@@ -236,12 +240,13 @@
                 android:id="@+id/add_comment_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_margin="5dp"
                 android:background="@android:color/transparent"
-                android:src="@drawable/ic_done_black_24dp"
-                android:layout_alignParentEnd="true" />
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/ic_done_black_24dp" />
 
         </RelativeLayout>
 
